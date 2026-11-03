@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>StayEase | Guest Login</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-family: 'DM Sans', sans-serif;
+            background: #101010;
+            color: #f5f2eb;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 430px;
+            padding: 42px 35px;
+            background: #1b1b1b;
+            border: 1px solid #493d27;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px #00000060;
+        }
+
+        .logo {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 35px;
+            font-weight: 700;
+            color: #d6b46a;
+        }
+
+        .logo span {
+            color: white;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+            margin-top: 10px;
+            margin-bottom: 35px;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 25px;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #ead39a;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #ddd;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background: #111;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #d6b46a;
+            box-shadow: 0 0 0 3px #d6b46a18;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 28px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(110deg, #c6a45d, #ead39a);
+            color: #17130c;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px #d6b46a35;
+        }
+
+        .error {
+            padding: 12px;
+            margin-bottom: 18px;
+            background: #481f1f;
+            border: 1px solid #843b3b;
+            color: #ffbaba;
+            border-radius: 7px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .back {
+            display: block;
+            margin-top: 25px;
+            text-align: center;
+            color: #d6b46a;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .note {
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+            margin-top: 22px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <div class="logo">Stay<span>Ease.</span></div>
+
+    <p class="subtitle">A better hotel experience begins here.</p>
+
+    <h2>Guest Login</h2>
+
+    <div class="error" th:if="${error}" th:text="${error}"></div>
+
+    <form action="/guest/login" method="post">
+
+        <label>Room Number</label>
+        <input type="text"
+               name="roomNumber"
+               placeholder="Enter your room number"
+               required>
+
+        <label>Guest PIN</label>
+        <input type="password"
+               name="pin"
+               placeholder="Enter your unique PIN"
+               required>
+
+        <button type="submit">SIGN IN →</button>
+
+    </form>
+
+    <p class="note">
+        Your login credentials are provided by hotel reception.
+        Please contact reception if you need assistance.
+    </p>
+
+    <a href="/" class="back">← Back to StayEase Home</a>
+
+</div>
+
+</body>
+</html>

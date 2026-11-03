@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>StayEase Admin Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #101010;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        .login-box {
+            width: 90%;
+            max-width: 400px;
+            padding: 40px;
+            background: #1c1c1c;
+            border: 1px solid #c9a44c;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #d4af5a;
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 18px;
+            border: 1px solid #555;
+            border-radius: 6px;
+            background: #292929;
+            color: white;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            background: #c9a44c;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #e0bd69;
+        }
+
+        .error {
+            color: #ff7777;
+            margin-bottom: 15px;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 22px;
+            color: #d4af5a;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <h1>StayEase</h1>
+    <p>Management Portal Login</p>
+
+    <div class="error" th:if="${param.error}">
+        Invalid username or password.
+    </div>
+
+    <div style="color:#8bd49b; margin-bottom:15px;"
+         th:if="${param.logout}">
+        You have been logged out.
+    </div>
+
+    <form th:action="@{/admin/login}" method="post">
+        <input type="text" name="username"
+               placeholder="Admin Username" required>
+
+        <input type="password" name="password"
+               placeholder="Admin Password" required>
+
+        <button type="submit">LOGIN</button>
+    </form>
+
+    <a href="/">Back to Homepage</a>
+</div>
+
+</body>
+</html>

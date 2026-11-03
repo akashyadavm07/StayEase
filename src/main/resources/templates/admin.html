@@ -1,0 +1,675 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayEase | Admin Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #101010;
+            color: #f5f1e8;
+        }
+
+        header {
+            background: #080808;
+            border-bottom: 1px solid #302719;
+            padding: 24px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h2 {
+            margin: 0;
+            color: #d6b46a;
+            letter-spacing: 2px;
+            font-size: 23px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        header a {
+            color: #d6b46a;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        header a:hover {
+            color: #fff0c2;
+        }
+
+        .logout-button {
+            background: #342719;
+            color: #e8c77e;
+            border: 1px solid #80643b;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .logout-button:hover {
+            background: #574125;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 45px auto;
+            padding: 0 25px;
+        }
+
+        .page-heading {
+            margin-bottom: 35px;
+        }
+
+        .eyebrow {
+            color: #c5a15a;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .page-heading h1 {
+            font-size: 34px;
+            margin: 0 0 10px;
+            color: #f8f5ed;
+            font-weight: 500;
+        }
+
+        .page-heading p {
+            color: #99938a;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 40px;
+        }
+
+        .summary-card {
+            background: linear-gradient(145deg, #1d1b18, #141414);
+            border: 1px solid #393023;
+            border-radius: 12px;
+            padding: 25px;
+            transition: 0.3s;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-4px);
+            border-color: #c5a15a;
+        }
+
+        .summary-card p {
+            color: #aaa196;
+            margin: 0 0 14px;
+            font-size: 13px;
+        }
+
+        .summary-card h2 {
+            color: #d6b46a;
+            margin: 0;
+            font-size: 32px;
+            font-weight: 500;
+        }
+
+        .section-title {
+            color: #d6b46a;
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+        }
+
+        .search-panel {
+            background: #191817;
+            border: 1px solid #393023;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 35px;
+        }
+
+        .search-panel h3 {
+            color: #d6b46a;
+            font-size: 16px;
+            font-weight: 500;
+            margin: 0 0 8px;
+        }
+
+        .search-panel p {
+            color: #99938a;
+            font-size: 13px;
+            margin: 0 0 18px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-form input {
+            flex: 1;
+            min-width: 220px;
+            padding: 14px 16px;
+            border: 1px solid #51432b;
+            border-radius: 7px;
+            background: #111110;
+            color: #e8d6ad;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-form input:focus {
+            border-color: #d6b46a;
+            box-shadow: 0 0 0 3px #d6b46a20;
+        }
+
+        .search-form input::placeholder {
+            color: #827968;
+        }
+
+        .search-button {
+            padding: 13px 25px;
+            background: linear-gradient(135deg, #e1c27e, #b18a43);
+            color: #17130b;
+            border: 1px solid #e6c982;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .search-button:hover {
+            background: linear-gradient(135deg, #f4dda5, #d6b46a);
+        }
+
+        .clear-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 20px;
+            background: #342719;
+            color: #e8c77e;
+            border: 1px solid #80643b;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .clear-button:hover {
+            background: #574125;
+        }
+
+        .search-result {
+            color: #c5a15a;
+            font-size: 13px;
+            margin: 18px 0 0;
+        }
+
+        .request-card {
+            background: #191817;
+            border: 1px solid #352e24;
+            border-radius: 13px;
+            padding: 27px;
+            margin: 18px 0;
+            transition: 0.3s;
+        }
+
+        .request-card:hover {
+            border-color: #8c713d;
+            box-shadow: 0 8px 25px #00000040;
+        }
+
+        .request-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 1px solid #35302a;
+            padding-bottom: 19px;
+            margin-bottom: 22px;
+        }
+
+        .request-top h3 {
+            margin: 0;
+            color: #e7d4a7;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 14px;
+        }
+
+        .detail {
+            background: #111110;
+            border: 1px solid #29251f;
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .detail strong {
+            display: block;
+            font-size: 10px;
+            color: #b99b60;
+            margin-bottom: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1.3px;
+        }
+
+        .detail span {
+            color: #e7e2d8;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .pending {
+            background: #3a301d;
+            color: #e5c477;
+            border: 1px solid #766035;
+        }
+
+        .in-progress {
+            background: #202c34;
+            color: #a6d0e5;
+            border: 1px solid #456577;
+        }
+
+        .completed {
+            background: #203126;
+            color: #a7d8ae;
+            border: 1px solid #456b4d;
+        }
+
+        .update-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #35302a;
+        }
+
+        .update-label {
+            display: block;
+            color: #b99b60;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .update-form {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        select, input[type="text"] {
+            flex: 1;
+            min-width: 220px;
+            padding: 13px 16px;
+            border: 1px solid #51432b;
+            border-radius: 7px;
+            background: #111110;
+            color: #e8d6ad;
+            font-size: 14px;
+            outline: none;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        input[type="text"]::placeholder {
+            color: #827968;
+        }
+
+        select:focus, input[type="text"]:focus {
+            border-color: #d6b46a;
+            box-shadow: 0 0 0 3px #d6b46a20;
+        }
+
+        select option {
+            background: #191817;
+            color: #f5e8c9;
+        }
+
+        .update-form button {
+            padding: 13px 25px;
+            background: linear-gradient(135deg, #e1c27e, #b18a43);
+            color: #17130b;
+            border: 1px solid #e6c982;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            transition: 0.3s;
+        }
+
+        .update-form button:hover {
+            background: linear-gradient(135deg, #f4dda5, #d6b46a);
+            transform: translateY(-2px);
+        }
+
+        .empty {
+            background: #191817;
+            border: 1px solid #393023;
+            padding: 55px 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .empty h3 {
+            color: #d6b46a;
+            font-weight: 500;
+        }
+
+        .empty p {
+            color: #99938a;
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            border-top: 1px solid #302719;
+            color: #81786a;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 20px;
+            }
+
+            .header-actions {
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+
+            .container {
+                margin: 30px auto;
+                padding: 0 15px;
+            }
+
+            .page-heading h1 {
+                font-size: 27px;
+            }
+
+            .request-card {
+                padding: 18px;
+            }
+
+            .update-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .update-form select,
+            .update-form input,
+            .update-form button {
+                width: 100%;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-form input,
+            .search-form button,
+            .search-form a {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>STAYEASE</h2>
+
+    <div class="header-actions">
+        <a href="/">← Guest Homepage</a>
+
+        <form th:action="@{/admin/logout}" method="post">
+            <button type="submit" class="logout-button">LOGOUT ↗</button>
+        </form>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-heading">
+        <div class="eyebrow">Management Portal</div>
+        <h1>Admin Dashboard</h1>
+        <p>Monitor guest requests and manage hotel services.</p>
+    </div>
+
+    <div class="summary">
+
+        <div class="summary-card">
+            <p>Total Requests</p>
+            <h2 th:text="${#lists.size(allRequests)}">0</h2>
+        </div>
+
+        <div class="summary-card">
+            <p>Pending Requests</p>
+            <h2 th:text="${#lists.size(allRequests.?[status == 'PENDING'])}">0</h2>
+        </div>
+
+        <div class="summary-card">
+            <p>In Progress</p>
+            <h2 th:text="${#lists.size(allRequests.?[status == 'IN_PROGRESS'])}">0</h2>
+        </div>
+
+        <div class="summary-card">
+            <p>Completed</p>
+            <h2 th:text="${#lists.size(allRequests.?[status == 'COMPLETED'])}">0</h2>
+        </div>
+
+    </div>
+
+    <div class="search-panel">
+
+        <h3>Find a Service Request</h3>
+        <p>Enter the request ID to quickly locate a guest's request.</p>
+
+        <form class="search-form" th:action="@{/admin}" method="get">
+
+            <input type="number"
+                   name="searchId"
+                   placeholder="Enter Request ID (e.g. 125)"
+                   min="1"
+                   th:value="${searchId}"
+                   required>
+
+            <button type="submit" class="search-button">
+                SEARCH REQUEST →
+            </button>
+
+            <a th:if="${searchPerformed}"
+               href="/admin"
+               class="clear-button">
+                CLEAR SEARCH
+            </a>
+
+        </form>
+
+        <p class="search-result"
+           th:if="${searchPerformed and !#lists.isEmpty(requests)}">
+            Request found! Showing the matching service request.
+        </p>
+
+    </div>
+
+    <div class="section-title"
+         th:text="${searchPerformed ? 'SEARCH RESULT' : 'SERVICE REQUESTS'}">
+        SERVICE REQUESTS
+    </div>
+
+    <div class="empty"
+         th:if="${#lists.isEmpty(requests) and !searchPerformed}">
+        <h3>No Requests Available</h3>
+        <p>Guest service requests will appear here.</p>
+    </div>
+
+    <div class="empty"
+         th:if="${#lists.isEmpty(requests) and searchPerformed}">
+        <h3>Request Not Found</h3>
+        <p>No service request exists with ID
+            <strong th:text="${searchId}"></strong>.
+            Please check the ID and try again.
+        </p>
+    </div>
+
+    <div th:each="request : ${requests}" class="request-card">
+
+        <div class="request-top">
+            <h3 th:text="'REQUEST #' + ${request.id}"></h3>
+
+            <span class="status"
+                  th:classappend="${request.status == 'PENDING'} ? ' pending' : (${request.status == 'IN_PROGRESS'} ? ' in-progress' : ' completed')"
+                  th:text="${request.status}">
+            </span>
+        </div>
+
+        <div class="details">
+
+            <div class="detail">
+                <strong>Guest Name</strong>
+                <span th:text="${request.guestName}"></span>
+            </div>
+
+            <div class="detail">
+                <strong>Room Number</strong>
+                <span th:text="${request.roomNumber}"></span>
+            </div>
+
+            <div class="detail">
+                <strong>Service Type</strong>
+                <span th:text="${request.serviceType}"></span>
+            </div>
+
+            <div class="detail">
+                <strong>Submitted At</strong>
+                <span th:text="${request.createdAt}"></span>
+            </div>
+
+            <div class="detail">
+                <strong>Assigned Staff</strong>
+                <span th:text="${request.assignedStaff != null and !#strings.isEmpty(request.assignedStaff) ? request.assignedStaff : 'Not Assigned'}"></span>
+            </div>
+
+            <div class="detail" style="grid-column: 1 / -1;">
+                <strong>Request Description</strong>
+                <span th:text="${request.description}"></span>
+            </div>
+
+        </div>
+
+        <div class="update-section">
+
+            <span class="update-label">Assign Staff Member</span>
+
+            <form class="update-form"
+                  th:action="@{/admin/assign-staff}"
+                  method="post">
+
+                <input type="hidden" name="id" th:value="${request.id}">
+
+                <input type="text"
+                       name="assignedStaff"
+                       placeholder="Enter staff member name"
+                       maxlength="100"
+                       th:value="${request.assignedStaff}"
+                       required>
+
+                <button type="submit">Assign Staff →</button>
+
+            </form>
+
+        </div>
+
+        <div class="update-section">
+
+            <span class="update-label">Manage Request Status</span>
+
+            <form class="update-form"
+                  th:action="@{/admin/update-status}"
+                  method="post">
+
+                <input type="hidden" name="id" th:value="${request.id}">
+
+                <select name="status" required>
+
+                    <option value="PENDING"
+                            th:selected="${request.status == 'PENDING'}">
+                        Pending
+                    </option>
+
+                    <option value="IN_PROGRESS"
+                            th:selected="${request.status == 'IN_PROGRESS'}">
+                        In Progress
+                    </option>
+
+                    <option value="COMPLETED"
+                            th:selected="${request.status == 'COMPLETED'}">
+                        Completed
+                    </option>
+
+                </select>
+
+                <button type="submit">Update Status →</button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    © 2026 STAYEASE | SMART HOTEL GUEST SERVICE PORTAL
+</footer>
+
+</body>
+</html>

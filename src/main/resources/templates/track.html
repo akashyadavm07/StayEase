@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>StayEase | Track Request</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #101010;
+            color: #f5f1e8;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #080808;
+            border-bottom: 1px solid #302719;
+            padding: 23px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h2 {
+            margin: 0;
+            color: #d6b46a;
+            letter-spacing: 2px;
+        }
+
+        header a {
+            color: #d6b46a;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        header a:hover {
+            color: #fff0c2;
+        }
+
+        .container {
+            max-width: 590px;
+            margin: 65px auto;
+            padding: 38px;
+            background: linear-gradient(145deg, #1d1b18, #141414);
+            border: 1px solid #393023;
+            border-radius: 15px;
+            box-shadow: 0 15px 45px #00000055;
+        }
+
+        .eyebrow {
+            text-align: center;
+            color: #c5a15a;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #f5e8c9;
+            font-size: 30px;
+            font-weight: 500;
+            margin: 0 0 12px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #99938a;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        label {
+            display: block;
+            margin: 19px 0 9px;
+            color: #c5a15a;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background: #111110;
+            color: #f5e8c9;
+            border: 1px solid #51432b;
+            border-radius: 7px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #d6b46a;
+            box-shadow: 0 0 0 3px #d6b46a20;
+        }
+
+        input::placeholder {
+            color: #777064;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 27px;
+            background: linear-gradient(135deg, #e1c27e, #b18a43);
+            color: #17130b;
+            border: 1px solid #e6c982;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #f4dda5, #d6b46a);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 18px #d6b46a25;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 23px;
+            background: #111110;
+            border: 1px solid #51432b;
+            border-radius: 10px;
+        }
+
+        .result h3 {
+            color: #d6b46a;
+            font-weight: 500;
+            margin: 0 0 20px;
+            border-bottom: 1px solid #35302a;
+            padding-bottom: 15px;
+        }
+
+        .result p {
+            text-align: left;
+            color: #c7c0b4;
+            font-size: 14px;
+            margin: 14px 0;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .result p strong {
+            color: #d6b46a;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .pending {
+            background: #3a301d;
+            color: #e5c477;
+            border: 1px solid #766035;
+        }
+
+        .in-progress {
+            background: #202c34;
+            color: #a6d0e5;
+            border: 1px solid #456577;
+        }
+
+        .completed {
+            background: #203126;
+            color: #a7d8ae;
+            border: 1px solid #456b4d;
+        }
+
+        .error {
+            background: #351d1d;
+            border: 1px solid #754040;
+            color: #f3a6a6;
+            padding: 14px;
+            border-radius: 7px;
+            text-align: center;
+            margin-top: 22px;
+            font-size: 13px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 27px;
+            color: #d6b46a;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .back-link:hover {
+            color: #fff0c2;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #81786a;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 20px;
+            }
+
+            .container {
+                margin: 35px 15px;
+                padding: 25px 20px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>STAYEASE</h2>
+    <a href="/">← Back to Home</a>
+</header>
+
+<div class="container">
+
+    <div class="eyebrow">Guest Service Portal</div>
+
+    <h1>Track Your Request</h1>
+
+    <p class="subtitle">
+        Stay updated on your hotel service request.
+        Enter your request ID and room number below.
+    </p>
+
+    <form action="/track" method="get">
+
+        <label>Request ID</label>
+        <input type="number"
+               name="id"
+               placeholder="Enter your request ID"
+               min="1"
+               required>
+
+        <label>Room Number</label>
+        <input type="text"
+               name="roomNumber"
+               placeholder="Enter your room number"
+               required>
+
+        <button type="submit">Track My Request →</button>
+
+    </form>
+
+    <div class="result" th:if="${request != null}">
+
+        <h3>Request Details</h3>
+
+        <p>
+            <strong>Request ID:</strong>
+            <span th:text="${request.id}"></span>
+        </p>
+
+        <p>
+            <strong>Guest:</strong>
+            <span th:text="${request.guestName}"></span>
+        </p>
+
+        <p>
+            <strong>Room:</strong>
+            <span th:text="${request.roomNumber}"></span>
+        </p>
+
+        <p>
+            <strong>Service:</strong>
+            <span th:text="${request.serviceType}"></span>
+        </p>
+
+        <p>
+            <strong>Description:</strong>
+            <span th:text="${request.description}"></span>
+        </p>
+
+        <p>
+            <strong>Status:</strong>
+
+            <span class="status"
+                  th:classappend="${request.status == 'PENDING'} ? ' pending' : (${request.status == 'IN_PROGRESS'} ? ' in-progress' : ' completed')"
+                  th:text="${request.status}">
+            </span>
+        </p>
+
+    </div>
+
+    <div class="error" th:if="${error != null}">
+        <span th:text="${error}"></span>
+    </div>
+
+    <a class="back-link" href="/">← Return to StayEase Homepage</a>
+
+</div>
+
+<footer>
+    © 2026 STAYEASE | SMART HOTEL GUEST SERVICE PORTAL
+</footer>
+
+</body>
+</html>
