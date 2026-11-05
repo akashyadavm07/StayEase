@@ -21,6 +21,7 @@ public class ServiceRequest {
 
     private String guestName;
     private String roomNumber;
+    private String floorNumber;
     private String serviceType;
 
     @Column(length = 1000)
@@ -58,6 +59,14 @@ public class ServiceRequest {
 
     public void setRoomNumber(String roomNumber) {
         this.roomNumber = roomNumber;
+    }
+
+    public String getFloorNumber() {
+        return floorNumber;
+    }
+
+    public void setFloorNumber(String floorNumber) {
+        this.floorNumber = floorNumber;
     }
 
     public String getServiceType() {

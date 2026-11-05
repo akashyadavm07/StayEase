@@ -1,0 +1,387 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayEase | Manage Food Menu</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #101010;
+            color: #f5f2eb;
+            padding: 35px 20px;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            color: #d6b46a;
+        }
+
+        .logo span {
+            color: white;
+        }
+
+        a {
+            color: #d6b46a;
+            text-decoration: none;
+        }
+
+        .heading {
+            margin-bottom: 25px;
+        }
+
+        .heading h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 35px;
+            margin-bottom: 8px;
+        }
+
+        .heading p {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #202020, #171717);
+            border: 1px solid #393124;
+            border-radius: 13px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            color: #ead39a;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 13px;
+            background: #111;
+            border: 1px solid #393939;
+            border-radius: 7px;
+            color: white;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 85px;
+            resize: vertical;
+        }
+
+        button {
+            border: none;
+            border-radius: 7px;
+            padding: 12px 18px;
+            background: linear-gradient(110deg, #c6a45d, #ead39a);
+            color: #17130c;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .add-button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 15px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th, td {
+            padding: 17px 12px;
+            border-bottom: 1px solid #393124;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            color: #d6b46a;
+            font-weight: 700;
+        }
+
+        td {
+            color: #ddd;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .available {
+            background: #173a2a;
+            color: #a5edc0;
+        }
+
+        .unavailable {
+            background: #401d1d;
+            color: #ffbaba;
+        }
+
+        .action-form {
+            display: inline-block;
+            margin: 3px;
+        }
+
+        .action-form button {
+            padding: 8px 12px;
+            font-size: 11px;
+        }
+
+        .delete-button {
+            background: #8b3030;
+            color: white;
+        }
+
+        .empty {
+            color: #999;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .message {
+            padding: 15px;
+            background: #401d1d;
+            color: #ffbaba;
+            border-radius: 7px;
+            margin-bottom: 20px;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+            font-size: 13px;
+        }
+
+        @media(max-width: 600px) {
+            body {
+                padding: 22px 14px;
+            }
+
+            .card {
+                padding: 22px 17px;
+            }
+
+            .heading h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <div class="logo">Stay<span>Ease.</span></div>
+
+        <a href="/admin">← Back to Dashboard</a>
+    </header>
+
+    <div class="heading">
+        <h1>Food Menu Management</h1>
+        <p>Add dishes and control their availability for hotel guests.</p>
+    </div>
+
+    <div class="card">
+
+        <h2>Add New Food Item</h2>
+
+        <div class="message"
+             th:if="${foodMessage}"
+             th:text="${foodMessage}">
+        </div>
+
+        <form th:action="@{/admin/food/add}" method="post">
+
+            <label>Food Name</label>
+            <input type="text"
+                   name="name"
+                   placeholder="Example: Chicken Biryani"
+                   maxlength="100"
+                   required>
+
+            <label>Description</label>
+            <textarea name="description"
+                      placeholder="Describe the food item..."
+                      maxlength="500"
+                      required></textarea>
+
+            <label>Price (₹)</label>
+            <input type="number"
+                   name="price"
+                   placeholder="Enter price"
+                   min="0.01"
+                   step="0.01"
+                   required>
+
+            <button type="submit" class="add-button">
+                + ADD FOOD ITEM
+            </button>
+
+        </form>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Existing Menu Items</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Food Name</th>
+                        <th>Price</th>
+                        <th>Availability</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr th:each="food : ${foodItems}">
+
+                        <td th:text="${food.id}">1</td>
+
+                        <td>
+                            <strong th:text="${food.name}">
+                                Chicken Biryani
+                            </strong>
+                            <p style="color:#999; margin-top:5px;"
+                               th:text="${food.description}">
+                            </p>
+                        </td>
+
+                        <td>
+                            ₹<span th:text="${food.price}">250</span>
+                        </td>
+
+                        <td>
+                            <span th:if="${food.available}"
+                                  class="status available">
+                                AVAILABLE
+                            </span>
+
+                            <span th:unless="${food.available}"
+                                  class="status unavailable">
+                                UNAVAILABLE
+                            </span>
+                        </td>
+
+                        <td>
+
+                            <form class="action-form"
+                                  th:action="@{/admin/food/toggle}"
+                                  method="post">
+
+                                <input type="hidden"
+                                       name="id"
+                                       th:value="${food.id}">
+
+                                <button type="submit">
+                                    Toggle
+                                </button>
+
+                            </form>
+
+                            <form class="action-form"
+                                  th:action="@{/admin/food/delete}"
+                                  method="post"
+                                  onsubmit="return confirm('Delete this food item?')">
+
+                                <input type="hidden"
+                                       name="id"
+                                       th:value="${food.id}">
+
+                                <button type="submit"
+                                        class="delete-button">
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(foodItems)}">
+                        <td colspan="5" class="empty">
+                            No food items have been added yet.
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div class="navigation">
+        <a href="/admin">Main Dashboard</a>
+        <a href="/admin/food-orders">Manage Food Orders</a>
+        <a href="/">Customer Homepage</a>
+    </div>
+
+</div>
+
+</body>
+</html>

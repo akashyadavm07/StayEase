@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayEase | Guest Announcements</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #0b0b0b;
+            color: #f5f5f5;
+        }
+
+        header {
+            padding: 22px 6%;
+            background: #111;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h2 {
+            color: #d6b36a;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+
+        a {
+            color: #d6b36a;
+            text-decoration: none;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .panel {
+            background: #151515;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            color: #d6b36a;
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 7px;
+            color: #ccc;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            background: #222;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 22px;
+            background: #d6b36a;
+            color: #111;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #edca82;
+        }
+
+        .announcement {
+            background: #202020;
+            border: 1px solid #444;
+            border-radius: 9px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .announcement h4 {
+            margin: 0 0 10px;
+            color: #d6b36a;
+            font-size: 19px;
+        }
+
+        .announcement p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .meta {
+            color: #999;
+            font-size: 13px;
+            margin: 8px 0;
+        }
+
+        .severity {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .INFO {
+            background: #174b70;
+            color: #b9e3ff;
+        }
+
+        .WARNING {
+            background: #72521b;
+            color: #ffe0a0;
+        }
+
+        .URGENT {
+            background: #702525;
+            color: #ffc0c0;
+        }
+
+        .inactive {
+            opacity: 0.5;
+        }
+
+        .success {
+            color: #8ee5a1;
+            margin-bottom: 15px;
+        }
+
+        .error {
+            color: #ff8585;
+            margin-bottom: 15px;
+        }
+
+        .deactivate {
+            background: #9b3434;
+            color: white;
+            padding: 9px 15px;
+            margin-top: 10px;
+        }
+
+        .empty {
+            color: #999;
+            padding: 15px 0;
+        }
+
+        @media(max-width: 600px) {
+            header {
+                padding: 18px 5%;
+            }
+
+            main {
+                margin-top: 20px;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>STAYEASE</h2>
+    <a href="/admin">← BACK TO DASHBOARD</a>
+</header>
+
+<main>
+
+    <section class="panel">
+        <h3>CREATE GUEST ANNOUNCEMENT</h3>
+
+        <p style="color:#999;">
+            Publish maintenance updates and important hotel notifications
+            for affected guests.
+        </p>
+
+        <p class="success" th:if="${successMessage}"
+           th:text="${successMessage}"></p>
+
+        <p class="error" th:if="${errorMessage}"
+           th:text="${errorMessage}"></p>
+
+        <form th:action="@{/admin/announcements/create}" method="post">
+
+            <label>Announcement Title</label>
+            <input type="text" name="title"
+                   placeholder="Example: Scheduled Power Maintenance"
+                   maxlength="255" required>
+
+            <label>Message</label>
+            <textarea name="message"
+                      placeholder="Enter details about the issue or maintenance..."
+                      maxlength="1500" required></textarea>
+
+            <label>Affected Area</label>
+            <select name="targetFloor" required>
+                <option value="ALL">Entire Hotel</option>
+                <option value="1">Floor 1</option>
+                <option value="2">Floor 2</option>
+                <option value="3">Floor 3</option>
+                <option value="4">Floor 4</option>
+                <option value="5">Floor 5</option>
+                <option value="6">Floor 6</option>
+                <option value="7">Floor 7</option>
+                <option value="8">Floor 8</option>
+                <option value="9">Floor 9</option>
+                <option value="10">Floor 10</option>
+            </select>
+
+            <label>Severity</label>
+            <select name="severity" required>
+                <option value="INFO">Information</option>
+                <option value="WARNING">Warning</option>
+                <option value="URGENT">Urgent</option>
+            </select>
+
+            <label>Expected Resolution Time (Optional)</label>
+            <input type="datetime-local" name="expectedResolution">
+
+            <button type="submit">PUBLISH ANNOUNCEMENT</button>
+
+        </form>
+    </section>
+
+    <section class="panel">
+        <h3>ANNOUNCEMENT HISTORY</h3>
+
+        <div th:if="${#lists.isEmpty(announcements)}" class="empty">
+            No announcements have been created yet.
+        </div>
+
+        <div th:each="announcement : ${announcements}"
+             class="announcement"
+             th:classappend="${!announcement.active} ? 'inactive' : ''">
+
+            <h4 th:text="${announcement.title}"></h4>
+
+            <span class="severity"
+                  th:classappend="${announcement.severity}"
+                  th:text="${announcement.severity}"></span>
+
+            <p th:text="${announcement.message}"></p>
+
+            <div class="meta">
+                Affected Area:
+                <strong th:text="${announcement.targetFloor == 'ALL' ? 'Entire Hotel' : 'Floor ' + announcement.targetFloor}"></strong>
+            </div>
+
+            <div class="meta"
+                 th:if="${announcement.expectedResolution != null}">
+                Expected Resolution:
+                <span th:text="${#temporals.format(announcement.expectedResolution, 'dd MMM yyyy, hh:mm a')}"></span>
+            </div>
+
+            <div class="meta">
+                Created:
+                <span th:text="${#temporals.format(announcement.createdAt, 'dd MMM yyyy, hh:mm a')}"></span>
+            </div>
+
+            <div class="meta">
+                Status:
+                <strong th:text="${announcement.active ? 'ACTIVE' : 'INACTIVE'}"></strong>
+            </div>
+
+            <form th:if="${announcement.active}"
+                  th:action="@{/admin/announcements/deactivate}"
+                  method="post">
+
+                <input type="hidden" name="id"
+                       th:value="${announcement.id}">
+
+                <button type="submit" class="deactivate">
+                    DEACTIVATE ANNOUNCEMENT
+                </button>
+            </form>
+
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>

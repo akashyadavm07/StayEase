@@ -11,20 +11,41 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.stayease.model.FoodItem;
+import com.stayease.model.GuestAnnouncement;
 import com.stayease.model.ServiceRequest;
+import com.stayease.repository.FoodItemRepository;
+import com.stayease.repository.GuestAnnouncementRepository;
 import com.stayease.repository.ServiceRequestRepository;
 
 @Controller
 public class ServiceRequestController {
 
     private final ServiceRequestRepository repository;
+    private final FoodItemRepository foodItemRepository;
+    private final GuestAnnouncementRepository announcementRepository;
 
-    public ServiceRequestController(ServiceRequestRepository repository) {
+    public ServiceRequestController(
+            ServiceRequestRepository repository,
+            FoodItemRepository foodItemRepository,
+            GuestAnnouncementRepository announcementRepository) {
         this.repository = repository;
+        this.foodItemRepository = foodItemRepository;
+        this.announcementRepository = announcementRepository;
     }
 
     @GetMapping("/")
-    public String home() {
+    public String home(Model model) {
+
+        List<FoodItem> availableFood =
+                foodItemRepository.findByAvailableTrueOrderByNameAsc();
+
+        List<GuestAnnouncement> announcements =
+                announcementRepository.findByActiveTrueOrderByCreatedAtDesc();
+
+        model.addAttribute("foodItems", availableFood);
+        model.addAttribute("announcements", announcements);
+
         return "index";
     }
 

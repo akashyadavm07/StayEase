@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayEase | Food Orders</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #101010;
+            color: #f5f2eb;
+            padding: 35px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            color: #d6b46a;
+        }
+
+        .logo span {
+            color: white;
+        }
+
+        a {
+            color: #d6b46a;
+            text-decoration: none;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 35px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .order-card {
+            background: linear-gradient(145deg, #202020, #171717);
+            border: 1px solid #393124;
+            border-radius: 13px;
+            padding: 25px;
+            margin-bottom: 22px;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #393124;
+            padding-bottom: 17px;
+            margin-bottom: 18px;
+        }
+
+        .order-header h2 {
+            color: #ead39a;
+            font-family: 'Playfair Display', serif;
+            font-size: 23px;
+        }
+
+        .order-date {
+            color: #999;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail {
+            background: #111;
+            padding: 14px;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            color: #999;
+            font-size: 11px;
+            margin-bottom: 7px;
+        }
+
+        .detail-value {
+            color: #f5f2eb;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .items-title {
+            color: #d6b46a;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #30291c;
+            font-size: 13px;
+            color: #ddd;
+        }
+
+        .total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 18px;
+            color: #ead39a;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .status-label {
+            color: #999;
+            font-size: 12px;
+            margin: 20px 0 8px;
+        }
+
+        select {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #393939;
+            border-radius: 7px;
+            color: white;
+            font-family: inherit;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: linear-gradient(110deg, #c6a45d, #ead39a);
+            color: #17130c;
+            border: none;
+            border-radius: 7px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 55px 20px;
+            background: #191919;
+            border: 1px solid #393124;
+            border-radius: 12px;
+            color: #999;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            font-size: 13px;
+        }
+
+        @media(max-width: 600px) {
+            body {
+                padding: 22px 14px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .order-card {
+                padding: 19px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <div class="logo">Stay<span>Ease.</span></div>
+        <a href="/admin">← Back to Dashboard</a>
+    </header>
+
+    <h1>Food Order Management</h1>
+
+    <p class="subtitle">
+        View incoming guest orders and manage their preparation status.
+    </p>
+
+    <div th:if="${#lists.isEmpty(foodOrders)}" class="empty">
+        <h2>No Food Orders Yet</h2>
+        <p style="margin-top:10px;">
+            New customer orders will appear here.
+        </p>
+    </div>
+
+    <div th:each="order : ${foodOrders}" class="order-card">
+
+        <div class="order-header">
+            <div>
+                <h2>
+                    Order #<span th:text="${order.id}">1</span>
+                </h2>
+
+                <p class="order-date"
+                   th:text="${#temporals.format(order.createdAt, 'dd MMM yyyy, hh:mm a')}">
+                    03 Nov 2026
+                </p>
+            </div>
+        </div>
+
+        <div class="details">
+
+            <div class="detail">
+                <p class="detail-label">GUEST NAME</p>
+                <p class="detail-value" th:text="${order.guestName}">
+                    Guest
+                </p>
+            </div>
+
+            <div class="detail">
+                <p class="detail-label">ROOM NUMBER</p>
+                <p class="detail-value" th:text="${order.roomNumber}">
+                    101
+                </p>
+            </div>
+
+            <div class="detail">
+                <p class="detail-label">PAYMENT METHOD</p>
+                <p class="detail-value" th:text="${order.paymentMethod}">
+                    ROOM
+                </p>
+            </div>
+
+            <div class="detail">
+                <p class="detail-label">PAYMENT STATUS</p>
+                <p class="detail-value" th:text="${order.paymentStatus}">
+                    UNPAID
+                </p>
+            </div>
+
+        </div>
+
+        <p class="items-title">ORDERED ITEMS</p>
+
+        <div th:each="item : ${order.items}" class="item-row">
+            <span>
+                <span th:text="${item.itemName}">Biryani</span>
+                ×
+                <span th:text="${item.quantity}">2</span>
+            </span>
+
+            <span>
+                ₹<span th:text="${item.lineTotal}">500</span>
+            </span>
+        </div>
+
+        <div class="total">
+            <span>Total Amount</span>
+            <span>
+                ₹<span th:text="${order.totalAmount}">500</span>
+            </span>
+        </div>
+
+        <form th:action="@{/admin/food-orders/update}" method="post">
+
+            <input type="hidden"
+                   name="id"
+                   th:value="${order.id}">
+
+            <p class="status-label">UPDATE ORDER STATUS</p>
+
+            <select name="status">
+
+                <option value="PENDING"
+                        th:selected="${order.orderStatus == 'PENDING'}">
+                    Pending
+                </option>
+
+                <option value="PREPARING"
+                        th:selected="${order.orderStatus == 'PREPARING'}">
+                    Preparing
+                </option>
+
+                <option value="DELIVERED"
+                        th:selected="${order.orderStatus == 'DELIVERED'}">
+                    Delivered
+                </option>
+
+                <option value="CANCELLED"
+                        th:selected="${order.orderStatus == 'CANCELLED'}">
+                    Cancelled
+                </option>
+
+            </select>
+
+            <button type="submit">UPDATE STATUS</button>
+
+        </form>
+
+    </div>
+
+    <div class="navigation">
+        <a href="/admin">Main Dashboard</a>
+        <a href="/admin/food">Manage Food Menu</a>
+        <a href="/">Customer Homepage</a>
+    </div>
+
+</div>
+
+</body>
+</html>

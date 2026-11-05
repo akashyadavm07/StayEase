@@ -25,11 +25,19 @@
             --muted: #a5a5a5;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'DM Sans', sans-serif;
             background: var(--black);
             color: #f5f2eb;
             min-height: 100vh;
+        }
+
+        [hidden] {
+            display: none !important;
         }
 
         header {
@@ -40,6 +48,9 @@
             align-items: center;
             background: #111;
             border-bottom: 1px solid #30291c;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .logo {
@@ -48,6 +59,7 @@
             font-weight: 700;
             letter-spacing: 1px;
             color: var(--gold);
+            cursor: pointer;
         }
 
         .logo span {
@@ -57,29 +69,63 @@
         nav {
             display: flex;
             align-items: center;
-            gap: 30px;
+            gap: 28px;
         }
 
         nav a {
+            position: relative;
             color: #d1d1d1;
             text-decoration: none;
             font-size: 13px;
             font-weight: 600;
-            transition: 0.3s;
+            transition: color .3s ease;
         }
 
-        nav a:hover {
+        nav a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -7px;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width .3s ease;
+        }
+
+        nav a:hover,
+        nav a.active {
             color: var(--gold);
+        }
+
+        nav a:hover::after,
+        nav a.active::after {
+            width: 100%;
         }
 
         .hero {
             position: relative;
             overflow: hidden;
-            padding: 105px 8% 100px;
+            min-height: 570px;
+            padding: 115px 8% 105px;
+            display: flex;
+            align-items: center;
             background:
-                radial-gradient(ellipse at 85% 30%, #604b2638, transparent 38%),
-                linear-gradient(110deg, #171717, #101010 65%);
+                linear-gradient(
+                    90deg,
+                    rgba(12,12,12,.93),
+                    rgba(12,12,12,.72),
+                    rgba(12,12,12,.48)
+                ),
+                url("https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=2000&q=85");
+            background-size: cover;
+            background-position: center;
             border-bottom: 1px solid #30291c;
+            animation: heroBackground 18s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroBackground {
+            from { background-size: 100% auto; }
+            to { background-size: 108% auto; }
         }
 
         .hero::after {
@@ -90,7 +136,7 @@
             font-family: 'Playfair Display', serif;
             font-size: clamp(100px, 19vw, 240px);
             font-weight: 700;
-            color: #ffffff08;
+            color: #ffffff10;
             pointer-events: none;
         }
 
@@ -98,6 +144,18 @@
             position: relative;
             z-index: 1;
             max-width: 720px;
+            animation: heroReveal 1s ease-out both;
+        }
+
+        @keyframes heroReveal {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .eyebrow {
@@ -121,7 +179,7 @@
         }
 
         .hero p {
-            color: #aaa;
+            color: #dedbd4;
             font-size: 16px;
             line-height: 1.8;
             max-width: 520px;
@@ -132,17 +190,213 @@
             height: 3px;
             background: var(--gold);
             margin-top: 30px;
+            animation: lineReveal 1.2s ease-out .4s both;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 65px auto;
+        @keyframes lineReveal {
+            from { width: 0; opacity: 0; }
+            to { width: 65px; opacity: 1; }
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+
+        .hero-button {
+            display: inline-block;
+            padding: 14px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: .3s;
+            cursor: pointer;
+        }
+
+        .hero-button.primary {
+            background: linear-gradient(110deg, #c6a45d, #ead39a);
+            color: #17130c;
+        }
+
+        .hero-button.secondary {
+            border: 1px solid #d6b46a;
+            color: var(--gold-light);
+            background: transparent;
+        }
+
+        .hero-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px #d6b46a30;
+        }
+
+        .alerts-section {
+            max-width: 1100px;
+            margin: 35px auto;
             padding: 0 22px;
+        }
+
+        .alerts-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 27px;
+            color: var(--gold-light);
+            margin-bottom: 20px;
+        }
+
+        .announcement-card {
+            padding: 22px 25px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            background: #191919;
+            border: 1px solid #444;
+            border-left: 5px solid #579bd1;
+        }
+
+        .announcement-card.WARNING {
+            border-left-color: #e3ae43;
+            background: #282115;
+        }
+
+        .announcement-card.URGENT {
+            border-left-color: #ed5555;
+            background: #2b1717;
+        }
+
+        .announcement-card.INFO {
+            border-left-color: #579bd1;
+        }
+
+        .alert-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .announcement-card h3 {
+            font-size: 19px;
+            color: #fff;
+        }
+
+        .alert-badge {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 6px 11px;
+            border-radius: 20px;
+            background: #174b70;
+            color: #b9e3ff;
+        }
+
+        .WARNING .alert-badge {
+            background: #72521b;
+            color: #ffe0a0;
+        }
+
+        .URGENT .alert-badge {
+            background: #702525;
+            color: #ffc0c0;
+        }
+
+        .announcement-message {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        .alert-meta {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 13px;
+        }
+
+        .alert-meta strong {
+            color: var(--gold-light);
+        }
+
+        .page-panel {
+            position: relative;
+            isolation: isolate;
+            min-height: calc(100vh - 145px);
+            padding: 65px 22px 80px;
+            max-width: 1144px;
+            margin: auto;
+            animation: panelReveal .55s ease both;
+        }
+
+        @keyframes panelReveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #foodPanel::before {
+            content: "";
+            position: fixed;
+            inset: 82px 0 0;
+            z-index: -1;
+            background-image:
+                linear-gradient(
+                    90deg,
+                    rgba(10,10,10,.88),
+                    rgba(10,10,10,.76),
+                    rgba(10,10,10,.90)
+                ),
+                url("https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=2000&q=85");
+            background-size: cover;
+            background-position: center;
+            opacity: .9;
+            pointer-events: none;
+        }
+
+        #servicesPanel::before {
+            content: "";
+            position: fixed;
+            inset: 82px 0 0;
+            z-index: -1;
+            background-image:
+                linear-gradient(
+                    90deg,
+                    rgba(10,10,10,.88),
+                    rgba(10,10,10,.76),
+                    rgba(10,10,10,.91)
+                ),
+                url("https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=2000&q=85");
+            background-size: cover;
+            background-position: center;
+            opacity: .9;
+            pointer-events: none;
+        }
+
+        .back-home {
+            display: inline-block;
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            transition: .3s;
+        }
+
+        .back-home:hover {
+            color: var(--gold-light);
+            transform: translateX(-4px);
         }
 
         .section-heading {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 38px;
         }
 
         .section-heading .eyebrow {
@@ -151,7 +405,7 @@
 
         .section-heading h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 34px;
+            font-size: 36px;
             font-weight: 600;
         }
 
@@ -162,11 +416,13 @@
         }
 
         .form-card {
-            background: linear-gradient(145deg, #202020, #171717);
+            background: rgba(25, 25, 25, .92);
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
             border: 1px solid #393124;
             border-radius: 16px;
-            padding: 42px;
-            box-shadow: 0 18px 55px #00000050;
+            padding: 35px;
+            box-shadow: 0 18px 55px #00000070;
         }
 
         .form-card h3 {
@@ -255,12 +511,6 @@
             outline: none;
             font-family: 'DM Sans', sans-serif;
             font-size: 14px;
-            transition: 0.3s;
-        }
-
-        input::placeholder,
-        textarea::placeholder {
-            color: #777;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -295,13 +545,117 @@
             font-weight: 700;
             letter-spacing: 1px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: .3s;
         }
 
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px #d6b46a35;
-            background: linear-gradient(110deg, #ead39a, #c6a45d);
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 22px;
+        }
+
+        .food-card {
+            background: rgba(25, 25, 25, .92);
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+            border: 1px solid #393124;
+            border-radius: 13px;
+            padding: 24px;
+            transition: .3s;
+            box-shadow: 0 12px 30px #00000035;
+        }
+
+        .food-card:hover {
+            transform: translateY(-5px);
+            border-color: #9b7d45;
+            box-shadow: 0 12px 30px #00000070;
+        }
+
+        .food-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 21px;
+            color: var(--gold-light);
+            margin-bottom: 10px;
+        }
+
+        .food-card p {
+            color: #aaa;
+            font-size: 13px;
+            line-height: 1.6;
+            min-height: 42px;
+        }
+
+        .food-price {
+            color: var(--gold);
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 17px;
+        }
+
+        .food-card label {
+            margin-top: 17px;
+        }
+
+        .food-card input {
+            margin-top: 0;
+        }
+
+        .empty-menu {
+            text-align: center;
+            padding: 40px;
+            background: rgba(25, 25, 25, .93);
+            backdrop-filter: blur(7px);
+            border: 1px solid #393124;
+            border-radius: 12px;
+            color: #aaa;
+        }
+
+        .checkout {
+            margin-top: 30px;
+            padding: 28px;
+            background: rgba(25, 25, 25, .94);
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+            border: 1px solid #393124;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px #00000040;
+        }
+
+        .checkout h3 {
+            color: var(--gold-light);
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+        }
+
+        .total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 22px;
+            padding-top: 20px;
+            border-top: 1px solid #393124;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gold-light);
+        }
+
+        .payment-note {
+            margin-top: 15px;
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .error {
+            background: #401d1d;
+            border: 1px solid #8b4545;
+            color: #ffbaba;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
 
         .tracking-note {
@@ -317,17 +671,13 @@
             font-weight: 600;
         }
 
-        .tracking-note a:hover {
-            text-decoration: underline;
-        }
-
         footer {
             border-top: 1px solid #30291c;
             padding: 30px 20px;
             text-align: center;
             color: #858585;
             font-size: 12px;
-            letter-spacing: 0.5px;
+            margin-top: 30px;
         }
 
         footer span {
@@ -342,19 +692,29 @@
             }
 
             nav {
-                gap: 20px;
+                gap: 17px;
+                flex-wrap: wrap;
+                justify-content: center;
             }
 
             .hero {
+                min-height: 470px;
                 padding: 75px 25px;
+                background-position: center;
+                animation: none;
             }
 
             .hero h1 {
                 font-size: 42px;
             }
 
-            .container {
-                margin: 45px auto;
+            .hero-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .page-panel {
+                padding: 40px 18px 60px;
             }
 
             .form-card {
@@ -364,6 +724,23 @@
             .section-heading h2 {
                 font-size: 29px;
             }
+
+            .announcement-card {
+                padding: 18px;
+            }
+
+            #foodPanel::before,
+            #servicesPanel::before {
+                background-position: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+                scroll-behavior: auto !important;
+            }
         }
     </style>
 </head>
@@ -371,32 +748,199 @@
 <body>
 
 <header>
-    <div class="logo">Stay<span>Ease.</span></div>
+    <div class="logo" onclick="showPanel('home')">
+        Stay<span>Ease.</span>
+    </div>
 
     <nav>
-        <a href="/track">Track My Request</a>
+        <a href="/" class="nav-link active" data-panel="home">Home</a>
+        <a href="#food" class="nav-link" data-panel="food">Order Food</a>
+        <a href="#services" class="nav-link" data-panel="services">Guest Services</a>
+        <a href="/track">Track Request</a>
     </nav>
 </header>
 
-<section class="hero">
-    <div class="hero-content">
-        <div class="eyebrow">THE STAYEASE EXPERIENCE</div>
+<main id="homePanel">
 
-        <h1>Your Comfort.<br>
-            <span>Our Priority.</span>
-        </h1>
+    <section class="hero" id="home">
+        <div class="hero-content">
 
-        <p>
-            Exceptional hospitality begins with the little things.
-            Request your hotel services effortlessly, and let us
-            make your stay truly comfortable.
-        </p>
+            <div class="eyebrow">THE STAYEASE EXPERIENCE</div>
 
-        <div class="hero-line"></div>
+            <h1>
+                Your Comfort.<br>
+                <span>Our Priority.</span>
+            </h1>
+
+            <p>
+                Exceptional hospitality begins with the little things.
+                Order your favourite food and request hotel services
+                effortlessly throughout your stay.
+            </p>
+
+            <div class="hero-line"></div>
+
+            <div class="hero-actions">
+                <a href="#food"
+                   class="hero-button primary"
+                   data-panel="food">
+                    EXPLORE OUR MENU →
+                </a>
+
+                <a href="#services"
+                   class="hero-button secondary"
+                   data-panel="services">
+                    REQUEST A SERVICE
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="alerts-section"
+             th:if="${!#lists.isEmpty(announcements)}">
+
+        <h2 class="alerts-heading">Important Guest Announcements</h2>
+
+        <div th:each="announcement : ${announcements}"
+             class="announcement-card"
+             th:classappend="${announcement.severity}">
+
+            <div class="alert-top">
+                <h3 th:text="${announcement.title}">Hotel Announcement</h3>
+
+                <span class="alert-badge"
+                      th:text="${announcement.severity}">INFO</span>
+            </div>
+
+            <p class="announcement-message"
+               th:text="${announcement.message}">
+                Announcement message
+            </p>
+
+            <div class="alert-meta">
+                Affected Area:
+                <strong th:text="${announcement.targetFloor == 'ALL' ? 'Entire Hotel' : 'Floor ' + announcement.targetFloor}">
+                    Entire Hotel
+                </strong>
+            </div>
+
+            <div class="alert-meta"
+                 th:if="${announcement.expectedResolution != null}">
+                Expected Resolution:
+                <strong th:text="${#temporals.format(announcement.expectedResolution, 'dd MMM yyyy, hh:mm a')}">
+                    05 Nov 2026
+                </strong>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<main class="page-panel" id="foodPanel" hidden>
+
+    <a href="/" class="back-home" data-panel="home">
+        ← BACK TO HOME
+    </a>
+
+    <div class="section-heading">
+        <div class="eyebrow">DINING EXPERIENCE</div>
+        <h2>Explore Our Menu</h2>
+        <p>Choose from our currently available dishes and enjoy them in your room.</p>
     </div>
-</section>
 
-<div class="container">
+    <div class="success" th:if="${param.foodSuccess}">
+        <h3>✓ Your Food Order Was Placed!</h3>
+        <p>Your order has been sent to our hotel team.</p>
+
+        <div class="request-id-box">
+            <p class="request-id-label">YOUR FOOD ORDER ID</p>
+            <h2 class="request-id" th:text="${foodOrderId}">15</h2>
+            <p class="save-note">Payment method: Charge to Room</p>
+        </div>
+    </div>
+
+    <div class="error" th:if="${foodError}" th:text="${foodError}"></div>
+
+    <form th:action="@{/food/order}" method="post" id="foodForm">
+
+        <input type="hidden"
+               th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}">
+
+        <div class="food-grid" th:if="${!#lists.isEmpty(foodItems)}">
+
+            <div class="food-card" th:each="food : ${foodItems}">
+
+                <h3 th:text="${food.name}">Food Name</h3>
+
+                <p th:text="${food.description}">Food description</p>
+
+                <div class="food-price">
+                    ₹<span th:text="${food.price}">250</span>
+                </div>
+
+                <label th:for="${'quantity_' + food.id}">Quantity</label>
+
+                <input type="number"
+                       class="food-quantity"
+                       th:id="${'quantity_' + food.id}"
+                       th:name="${'quantity_' + food.id}"
+                       value="0"
+                       min="0"
+                       max="20"
+                       th:data-price="${food.price}">
+            </div>
+
+        </div>
+
+        <div class="empty-menu" th:if="${#lists.isEmpty(foodItems)}">
+            <h3>No Food Items Available</h3>
+            <p>Our menu is currently being updated. Please check again later.</p>
+        </div>
+
+        <div class="checkout" th:if="${!#lists.isEmpty(foodItems)}">
+
+            <h3>Checkout</h3>
+
+            <label>Guest Name</label>
+            <input type="text"
+                   name="guestName"
+                   placeholder="Enter your full name"
+                   required>
+
+            <label>Room Number</label>
+            <input type="text"
+                   name="roomNumber"
+                   placeholder="Enter your room number"
+                   required>
+
+            <label>Payment Method</label>
+            <input type="text" value="Charge to Room" readonly>
+
+            <p class="payment-note">
+                Your food bill will be recorded against your room.
+                Payment is settled with the hotel separately.
+            </p>
+
+            <div class="total">
+                <span>Total Amount</span>
+                <span>₹<span id="totalAmount">0.00</span></span>
+            </div>
+
+            <button type="submit">PLACE FOOD ORDER →</button>
+
+        </div>
+    </form>
+
+</main>
+
+<main class="page-panel" id="servicesPanel" hidden>
+
+    <a href="/" class="back-home" data-panel="home">
+        ← BACK TO HOME
+    </a>
 
     <div class="section-heading">
         <div class="eyebrow">PERSONALIZED HOSPITALITY</div>
@@ -407,11 +951,13 @@
     <div class="form-card">
 
         <h3>Request a Service</h3>
+
         <p class="form-subtitle">
             Please provide your details so we can assist you.
         </p>
 
         <div class="success" th:if="${param.success}">
+
             <h3>✓ Request Submitted Successfully!</h3>
 
             <p>Your service request has been received by our team.</p>
@@ -436,9 +982,14 @@
             <a href="/track" class="track-button">
                 TRACK MY REQUEST →
             </a>
+
         </div>
 
         <form th:action="@{/submit-request}" method="post">
+
+            <input type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}">
 
             <label>Guest Name</label>
             <input type="text"
@@ -452,16 +1003,23 @@
                    placeholder="Enter your room number"
                    required>
 
+            <label>Floor Number</label>
+            <input type="text"
+                   name="floorNumber"
+                   placeholder="Enter your floor number"
+                   required>
+
             <label>Select Service</label>
+
             <select name="serviceType" required>
                 <option value="">Choose a service</option>
-                <option value="Food">Food</option>
                 <option value="Housekeeping">Housekeeping</option>
                 <option value="Room Service">Room Service</option>
                 <option value="Maintenance">Maintenance</option>
             </select>
 
             <label>Describe Your Request</label>
+
             <textarea name="description"
                       placeholder="Tell us what you need..."
                       required></textarea>
@@ -476,11 +1034,149 @@
         </div>
 
     </div>
-</div>
+
+</main>
 
 <footer>
     © 2026 <span>StayEase</span> | Smart Hotel Guest Service Portal
 </footer>
+
+<script>
+    const homePanel = document.getElementById('homePanel');
+    const foodPanel = document.getElementById('foodPanel');
+    const servicesPanel = document.getElementById('servicesPanel');
+
+    const navLinks = document.querySelectorAll('[data-panel]');
+
+    function showPanel(panelName, updateHistory = true) {
+
+        homePanel.hidden = true;
+        foodPanel.hidden = true;
+        servicesPanel.hidden = true;
+
+        navLinks.forEach(link => {
+            link.classList.toggle(
+                'active',
+                link.dataset.panel === panelName
+            );
+        });
+
+        if (panelName === 'home') {
+            homePanel.hidden = false;
+        }
+
+        if (panelName === 'food') {
+            foodPanel.hidden = false;
+        }
+
+        if (panelName === 'services') {
+            servicesPanel.hidden = false;
+        }
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
+        if (updateHistory) {
+            const newUrl = panelName === 'home'
+                ? '/'
+                : '#' + panelName;
+
+            history.replaceState(null, '', newUrl);
+        }
+    }
+
+    navLinks.forEach(link => {
+
+        link.addEventListener('click', function(event) {
+
+            event.preventDefault();
+
+            showPanel(this.dataset.panel);
+
+        });
+
+    });
+
+    const params = new URLSearchParams(window.location.search);
+
+    if (
+        params.has('foodSuccess') ||
+        document.querySelector('#foodPanel .error')
+    ) {
+        showPanel('food', false);
+    } else if (params.has('success')) {
+        showPanel('services', false);
+    } else {
+        showPanel('home', false);
+    }
+
+    window.addEventListener('popstate', function() {
+
+        const hash = window.location.hash;
+
+        if (hash === '#food') {
+            showPanel('food', false);
+        } else if (hash === '#services') {
+            showPanel('services', false);
+        } else {
+            showPanel('home', false);
+        }
+
+    });
+
+    const quantityInputs = document.querySelectorAll('.food-quantity');
+    const totalDisplay = document.getElementById('totalAmount');
+
+    function calculateTotal() {
+
+        let total = 0;
+
+        quantityInputs.forEach(input => {
+
+            const quantity = parseInt(input.value) || 0;
+            const price = parseFloat(input.dataset.price) || 0;
+
+            total += quantity * price;
+
+        });
+
+        if (totalDisplay) {
+            totalDisplay.textContent = total.toFixed(2);
+        }
+
+    }
+
+    quantityInputs.forEach(input => {
+        input.addEventListener('input', calculateTotal);
+    });
+
+    const foodForm = document.getElementById('foodForm');
+
+    if (foodForm) {
+
+        foodForm.addEventListener('submit', function(event) {
+
+            let hasItem = false;
+
+            quantityInputs.forEach(input => {
+
+                if (parseInt(input.value) > 0) {
+                    hasItem = true;
+                }
+
+            });
+
+            if (!hasItem) {
+                event.preventDefault();
+                alert('Please select at least one food item.');
+            }
+
+        });
+
+    }
+</script>
 
 </body>
 </html>
